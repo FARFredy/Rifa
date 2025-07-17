@@ -391,7 +391,7 @@
                     </div>
                     <div class="form-group">
                         <label for="participantPhone">Teléfono:</label>
-                        <input type="tel" id="participantPhone" name="participantPhone" required>
+                        <input type="tel" id="participantPhone" name="participantPhone" required pattern="[0-9]{10,}">
                     </div>
                     <div class="form-group">
                         <label>Selecciona tus números (máximo 5):</label>
@@ -662,14 +662,18 @@ Y envía el comprobante por WhatsApp al mismo número.`;
 
         // Convertir a CSV
         function convertToCSV(data) {
-            const headers = Object.keys(data[0]);
-            const csvContent = [
-                headers.join(','),
-                ...data.map(row => headers.map(header => row[header]).join(','))
-            ].join('\n');
-            
-            return csvContent;
-        }
+    const headers = Object.keys(data[0]);
+    const csvContent = [
+        headers.join(','),
+        ...data.map(row =>
+            headers.map(header => {
+                const value = String(row[header]).replace(/"/g, '""');
+                return `"${value}"`;
+            }).join(',')
+        )
+    ].join('\n');
+    return csvContent;
+}
 
         // Descargar CSV
         function downloadCSV(csv, filename) {
